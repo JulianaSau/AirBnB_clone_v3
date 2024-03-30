@@ -71,6 +71,7 @@ class TestDBStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
         """Test that the get retrieves obj based on class and id"""
         storage = DBStorage()
@@ -79,6 +80,7 @@ class TestDBStorage(unittest.TestCase):
         cls_obj = storage.get(City, city_id)
         self.assertEqual(cls_obj, new_city)
 
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count_with_all_objs(self):
         """Test that the count method working with counting all objects"""
         storage = DBStorage()
@@ -89,6 +91,7 @@ class TestDBStorage(unittest.TestCase):
         
         self.assertEqual(new_count, old_count + 1)
 
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count_with_cls(self):
         """Test that the count method is working with counting
         specified class objects
