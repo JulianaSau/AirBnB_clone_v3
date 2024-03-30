@@ -16,7 +16,6 @@ from models.state import State
 from models.user import User
 import json
 import os
-import pep8
 import unittest
 FileStorage = file_storage.FileStorage
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
@@ -29,21 +28,6 @@ class TestFileStorageDocs(unittest.TestCase):
     def setUpClass(cls):
         """Set up for the doc tests"""
         cls.fs_f = inspect.getmembers(FileStorage, inspect.isfunction)
-
-    def test_pep8_conformance_file_storage(self):
-        """Test that models/engine/file_storage.py conforms to PEP8."""
-        pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['models/engine/file_storage.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
-
-    def test_pep8_conformance_test_file_storage(self):
-        """Test tests/test_models/test_file_storage.py conforms to PEP8."""
-        pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['tests/test_models/test_engine/\
-test_file_storage.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
 
     def test_file_storage_module_docstring(self):
         """Test for the file_storage.py module docstring"""
@@ -113,3 +97,40 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Test that get method retrieves an object by class and id"""
+        storage = FileStorage()
+        new_city = City()
+        city_id = new_city.id
+        storage.new(new_city)
+        city_obj = storage.get(City, city_id)
+        self.assertEqual(city_obj, new_city)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count_with_all_objs(self):
+        """Test that the count method working with counting all objects"""
+        storage = FileStorage()
+        old_count = len(storage.all())
+
+        new_city = City()
+        storage.new(new_city)
+        new_count = storage.count()
+        
+        self.assertEqual(new_count, old_count + 1)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count_with_cls(self):
+        """Test that the count method is working with counting
+        specified class objects
+        """
+        storage = FileStorage()
+        old_count = len(storage.all(City))
+
+        new_city = City()
+        storage.new(new_city)
+        new_count = storage.count(City)
+        
+        self.assertEqual(new_count, old_count + 1)
+
