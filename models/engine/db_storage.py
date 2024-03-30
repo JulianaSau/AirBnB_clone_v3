@@ -42,10 +42,12 @@ class DBStorage:
 
     def all(self, cls=None):
         """query on the current database session"""
+        Session = self.__session
+        session = Session()
         new_dict = {}
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
-                objs = self.__session.query(classes[clss]).all()
+                objs = session.query(classes[clss]).all()
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
@@ -74,3 +76,18 @@ class DBStorage:
     def close(self):
         """call remove() method on the private session attribute"""
         self.__session.remove()
+
+    def get(self, cls, id):
+        """Retrieves an object based on class and id"""
+        cls_objs = self.all(cls).values()
+        for obj in cls_objs:
+            if obj.id == id:
+                return obj
+        return None
+
+    def count(self, cls=None):
+        """Counts the object of a specific class if cls is defined
+        or all objects otherwise
+        """
+        objs = self.all(cls) if cls else self.all()
+        return len(objs)
