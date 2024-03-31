@@ -54,10 +54,7 @@ class FileStorage:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
             for key in jo:
-                cls_name = jo[key]["__class__"]
-                cls = classes[cls_name]
-                cls_obj = cls(**jo[key])
-                self.__objects[key] = cls_obj
+                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
         except Exception:
             pass
 
