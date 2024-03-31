@@ -10,16 +10,6 @@ from models.city import City
 from models.state import State
 
 
-@app_views.route('/cities', methods=['GET'])
-def all_cities():
-    """Retrieves all the City objects
-    """
-    cities = storage.all(City).values()
-    cities_lst = [city.to_dict() for city in cities]
-
-    return jsonify(cities_lst)
-
-
 @app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'])
 def cities_in_state(state_id):
     """Retrieves a State object
@@ -41,7 +31,7 @@ def cities_in_state(state_id):
             abort(404)
 
         city = request.get_json()
-        if city is None:
+        if state is None:
             abort(400, description="Not a JSON")
         elif 'name' not in city:
             abort(400, description="Missing name")
