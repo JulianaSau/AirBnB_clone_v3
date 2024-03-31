@@ -37,6 +37,7 @@ def cities_in_state(state_id):
             return "Missing name", 400
 
         new_city = City(**city)
+        new_city.state_id = state_id
         new_city.save()
         return make_response(jsonify(new_city.to_dict()), 201)
 
