@@ -11,15 +11,17 @@ from sqlalchemy.orm import relationship
 
 class State(BaseModel, Base):
     """Representation of state """
-    if models.storage_t == "db":
-        __tablename__ = 'states'
-        name = Column(String(128), nullable=False)
-        cities = relationship("City", backref="state")
-    else:
-        name = ""
+
+    __tablename__ = 'states'
+    name = Column(String(128), nullable=False)
+    cities = relationship("City", backref="state")
 
     def __init__(self, *args, **kwargs):
         """initializes state"""
+        dir_dct = self.__dir__()
+        for key in kwargs:
+            if key in dir_dct:
+                self.__dict__[key] = kwargs[key]
         super().__init__(*args, **kwargs)
 
     if models.storage_t != "db":

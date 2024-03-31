@@ -73,7 +73,8 @@ def update_state(state_id):
     # key-value pairs of the dictionary. Ignore keys:
     # id, created_at and updated_at
     for key, value in updated_state.items():
-        if key not in ['id', 'created_at', 'updated_at']:
+        state_dir = state.__dir__()
+        if key not in ['id', 'created_at', 'updated_at'] and key in state_dir:
             setattr(state, key, value)
 
     storage.save()
