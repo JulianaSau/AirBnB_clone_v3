@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Creates views for Amenity objects that handles all default RESTFul API action
+"""Creates views for Amenity objects that handles
+all default RESTFul API action
 """
 
 from api.v1.views.index import app_views

@@ -92,4 +92,3 @@ def update_place(place_id):
 
     place.save()
     return make_response(jsonify(place.to_dict()), 200)
-
