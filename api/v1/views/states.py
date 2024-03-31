@@ -20,14 +20,14 @@ def states():
             states_list.append(state.to_dict())
 
         return jsonify(states_list)
-    
+
     if request.method == 'POST':
         state = request.get_json()
         if state is None:
             return "Not a JSON", 400
         elif 'name' not in state:
             return "Missing name", 400
-        
+
         new_state = State(**state)
         new_state.save()
         return jsonify(new_state.to_dict(), 201)
@@ -68,9 +68,10 @@ def update_state(state_id):
         return "Not a JSON", 400
     elif updated_state.get('name') is None:
         return "Missing name", 400
-    
-    # now to update the State object with all key-value pairs of the dictionary.
-    # Ignore keys: id, created_at and updated_at
+
+    # now to update the State object with all 
+    # key-value pairs of the dictionary. Ignore keys: 
+    # id, created_at and updated_at
     for key, value in updated_state.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(state, key, value)
@@ -78,4 +79,5 @@ def update_state(state_id):
     storage.save()
 
     return make_response(jsonify(state.to_dict()), 200)
+
         
