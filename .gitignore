@@ -1,0 +1,10 @@
+# Project files
+__pycache__
+models/__pycache__/*.pyc
+models/engine/__pycache__/*.pyc
+file.json
+test_params_create
+main_delete.py
+main_place_amenities.py
+web_flask/venv
+venv/*
