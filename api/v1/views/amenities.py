@@ -24,9 +24,9 @@ def amenities():
     if request.method == 'POST':
         amenity = request.get_json()
         if amenity is None:
-            return "Not a JSON", 400
+            abort(400, description="Not a JSON")
         elif 'name' not in amenity:
-            return "Missing name", 400
+            abort(400, description="Missing name")
 
         new_amenity = Amenity(**amenity)
         new_amenity.save()
@@ -65,9 +65,9 @@ def update_amenity(amenity_id):
 
     updated_amenity = request.get_json()
     if updated_amenity is None:
-        return "Not a JSON", 400
+        abort(400, description="Not a JSON")
     elif updated_amenity.get('name') is None:
-        return "Missing name", 400
+        abort(400, description="Missing name")
 
     # now to update the Amenity object with all
     # key-value pairs of the dictionary. Ignore keys:

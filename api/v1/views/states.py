@@ -24,9 +24,9 @@ def states():
     if request.method == 'POST':
         state = request.get_json()
         if state is None:
-            return "Not a JSON", 400
+            abort(400, description="Not a JSON")
         elif 'name' not in state:
-            return "Missing name", 400
+            abort(400, description="Missing name")
 
         new_state = State(**state)
         new_state.save()
@@ -65,9 +65,9 @@ def update_state(state_id):
 
     updated_state = request.get_json()
     if updated_state is None:
-        return "Not a JSON", 400
+        abort(400, description="Not a JSON")
     elif updated_state.get('name') is None:
-        return "Missing name", 400
+        abort(400, description="Missing name")
 
     # now to update the State object with all
     # key-value pairs of the dictionary. Ignore keys:

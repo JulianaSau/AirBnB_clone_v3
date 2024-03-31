@@ -32,9 +32,9 @@ def cities_in_state(state_id):
 
         city = request.get_json()
         if state is None:
-            return "Not a JSON", 400
+            abort(400, description="Not a JSON")
         elif 'name' not in city:
-            return "Missing name", 400
+            abort(400, description="Missing name")
 
         new_city = City(**city)
         new_city.state_id = state_id
@@ -75,10 +75,10 @@ def update_city(city_id):
 
     city_data = request.get_json()
     if city_data is None:
-        return "Not a JSON", 400
+        abort(400, description="Not a JSON")
 
     for key, value in city_data.items():
-        if key not in ['id', 'created_at', 'updated_at']:
+        if key not in ['id', 'state_id', 'created_at', 'updated_at']:
             setattr(city, key, value)
 
     city.save()
