@@ -69,8 +69,8 @@ def update_state(state_id):
     elif updated_state.get('name') is None:
         return "Missing name", 400
 
-    # now to update the State object with all 
-    # key-value pairs of the dictionary. Ignore keys: 
+    # now to update the State object with all
+    # key-value pairs of the dictionary. Ignore keys:
     # id, created_at and updated_at
     for key, value in updated_state.items():
         if key not in ['id', 'created_at', 'updated_at']:
@@ -79,5 +79,3 @@ def update_state(state_id):
     storage.save()
 
     return make_response(jsonify(state.to_dict()), 200)
-
-        
