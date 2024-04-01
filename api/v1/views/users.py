@@ -68,8 +68,6 @@ def update_user(user_id):
     updated_user = request.get_json()
     if updated_user is None:
         abort(400, description="Not a JSON")
-    elif updated_user.get('name') is None:
-        abort(400, description="Missing name")
 
     # now to update the User object with all
     # key-value pairs of the dictionary. Ignore keys:
