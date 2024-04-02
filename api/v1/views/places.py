@@ -9,6 +9,8 @@ from models import storage
 from models.place import Place
 from models.city import City
 from models.user import User
+from models.state import State
+from os import getenv
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET', 'POST'])
@@ -92,3 +94,53 @@ def update_place(place_id):
 
     place.save()
     return make_response(jsonify(place.to_dict()), 200)
+
+
+@app_views.route('/places_search', methods=['POST'])
+def search_places():
+    """retrieves places based on state, city or amenity
+    """
+    places = []
+    cities = []
+    filters_dct = request.get_json()
+    if filters_dct is None:
+        abort(400, description="Not a JSON")
+
+    for fltr, ids in filters_dct.items():
+        if fltr == "states":
+            for state_id in ids:
+                state = storage.get(State, state_id)
+                for city in state.cities:
+                    if city in cities:
+                        continue
+                    cities.append(city)
+                    for place in city.places:
+                        places.append(place.to_dict())
+        elif fltr == "cities":
+            for city_id in ids:
+                city = storage.get(City, city_id)
+                if city in cities:
+                    continue
+                cities.append(city)
+                for place in city.places:
+                    places.append(place.to_dict())
+
+    if len(places) == 0:
+        places_objs = storage.all(Place).values()
+        places = [place.to_dict() for place in places_objs]
+    if "amenities" in filters_dct:
+        amenities_ids = filters_dct["amenities"]
+        places_cpy = places.copy()
+        for place in places_cpy:
+            place_obj = storage.get(Place, place["id"])
+
+            if getenv("HBNB_TYPE_STORAGE") == "db":
+                amenity_ids = [amenity.id for amenity in place_obj.amenities]
+            else:
+                amenity_ids = place_obj.amenity_ids
+
+            for amenity_id in amenities_ids:
+                if amenity_id not in amenity_ids:
+                    places.remove(place)
+
+    return make_response(jsonify(places), 200)
